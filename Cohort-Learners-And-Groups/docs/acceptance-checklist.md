@@ -1,0 +1,13 @@
+# CohortHub Acceptance Checklist
+
+| Check (from challenge PDF)                                          | Expected                                                      | Actual                                                                       | Pass |
+|---------------------------------------------------------------------|---------------------------------------------------------------|------------------------------------------------------------------------------|------|
+| Reject duplicate learner IDs                                        | DuplicateLearnerIdException                                   | Test: register_duplicateId_throwsDuplicateLearnerIdException                 | [x]  |
+| Reject duplicate email addresses                                    | DuplicateEmailException (case-insensitive)                    | Test: register_duplicateEmailDifferentCase_throwsDuplicateEmailException     | [x]  |
+| Adding same learner to a group twice does not duplicate              | One membership                                                | Test: addLearnerToGroup_sameLearnerTwice_doesNotDuplicate                    | [x]  |
+| Support requests in arrival order (FIFO)                            | First in is first out                                         | Test: attendNextLearner_followsArrivalOrder                                  | [x]  |
+| Removing a learner leaves no stale memberships or queue entries      | Learner gone, no group membership, no queue entry            | Test: removeLearner_learnerInGroupsAndQueue_leavesNoStaleReferences          | [x]  |
+| Sorting learners does not corrupt ID-based lookup                   | Map untouched by sort                                         | Test: getLearnersSortedBy_doesNotCorruptIdLookup                             | [x]  |
+| Learner identity: equals/hashCode on immutable ID                    | Two learners with same ID are equal                          | Tests in LearnerTest                                                         | [x]  |
+| Stretch: learners in both of two groups (intersection)               | Correct set                                                   | Test: getLearnersInBothGroups_intersection                                   | [x]  |
+| Stretch: learners in either but not both (symmetric difference)      | Correct set                                                   | Test: getLearnersInEitherButNotBothGroups_symmetricDifference                | [x]  |

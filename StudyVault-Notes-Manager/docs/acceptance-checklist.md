@@ -1,0 +1,16 @@
+# StudyVault Acceptance Checklist
+
+| Check (from challenge PDF)                                        | Expected                                                     | Actual                                                                    | Pass |
+|-------------------------------------------------------------------|--------------------------------------------------------------|---------------------------------------------------------------------------|------|
+| Persistence after restart                                         | Note file exists under data/notes/ and survives mvn exec restart | Manual: create note, exit, mvn exec:java again, list notes shows it       | [x]  |
+| Safe appending                                                    | Existing content preserved, new content added                | Test: appendToNote_existingNote_preservesOldContentAndAddsNew             | [x]  |
+| UTF-8 text                                                        | Non-ASCII characters round-trip                              | Test: readNote_nonAsciiUtf8Content_preserved                              | [x]  |
+| Identical exported contents                                       | Export backup bytes equal source bytes                       | Test: exportNote_preservesExactBytes (assertArrayEquals)                  | [x]  |
+| Graceful missing file handling                                    | NoteNotFoundException with useful message                    | Tests: readNote_missingNote, deleteNote_missingNote, restoreNote_missingBackup | [x]  |
+| Invalid filenames rejected                                        | InvalidNoteNameException for blank, path separators, dot-dot | Tests in NoteNameValidatorTest                                            | [x]  |
+| Ask before overwriting existing note on create                    | NoteAlreadyExistsException caught; menu asks then overwrites | Manual: create same title twice, confirm y, note overwritten              | [x]  |
+| Restore does not silently overwrite                               | BackupConflictException before menu asks                     | Test: restoreNote_targetExistsWithoutOverwrite_throwsBackupConflictException | [x]  |
+| Backup uses FileInputStream/FileOutputStream with byte buffer     | copyBytesWithBuffer uses 8192-byte buffer, no Files.copy     | Code review: BackupStorage.copyBytesWithBuffer                            | [x]  |
+| Buffer handles files larger than buffer size                      | 100 KB file round-trips exactly                              | Test: exportNote_largeFileLargerThanBuffer_copiesAllBytes                 | [x]  |
+| try-with-resources on every stream                                | No InputStream or OutputStream escapes a try block           | Code review: every FileInputStream/FileOutputStream is in try-with-resources | [x]  |
+| Stretch: size, line count, last-modified in list                  | NoteSummary exposes all three                                | Test: listNotes_multipleNotes_returnsSortedSummariesWithMetadata          | [x]  |
